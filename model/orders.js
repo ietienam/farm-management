@@ -14,13 +14,14 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: [true, "An Order must have a cost"],
     },
-    is_delivered: {
-      type: Boolean,
-      default: false,
+    order_status: {
+      type: Number,
+      default: 0, // 0 = ordered, 1 = in transit, 2 = delivered, 3 = failed
     },
     destination: {
       type: String,
-      default: "Benue",
+      default: "benue",
+      lowercase: true,
     },
     seller: {
       type: String,

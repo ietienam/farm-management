@@ -10,13 +10,15 @@ const transferSchema = new mongoose.Schema(
       type: String,
       required: [true, "A transfer must have an order_id"]
     },
-    is_delivered: {
-      type: Boolean,
-      default: false,
+    transfer_status: {
+      type: Number,
+      default: 0, // 0 = ordered, 1 = in transit, 2 = delivered, 3 = failed
     },
     destination: {
       type: String,
-      required: [true, "A transfer must have a destination"],
+      lowercase: true,
+      default: 'abuja',
+      //required: [true, "A transfer must have a destination"],
     },
   },
   { timestamps: true },

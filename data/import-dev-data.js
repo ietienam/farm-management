@@ -1,3 +1,4 @@
+const fs = require('fs');
 const mongoose = require("mongoose");
 const Order = require("../model/orders");
 
@@ -16,6 +17,20 @@ mongoose
     console.log("| Connected to Smorfarms Crop Management DB |");
     console.log("=============================================");
   });
+
+const orders = JSON.parse(
+  fs.readFileSync(`${__dirname}/orders.json`, "utf-8")
+);
+
+const importData = async () => {
+  try {
+    await Order.create(orders);
+    console.log("Data sucessfully sent!");
+  } catch (error) {
+    console.log(error);
+  }
+  process.exit();
+};
 
 const deleteData = async () => {
   try {
