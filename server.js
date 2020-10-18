@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+let mongoose = require("mongoose");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION! Shutting down...");
@@ -6,9 +6,9 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-const app = require("./app");
+let app = require("./app");
 
-const DB =
+let DB =
   "mongodb+srv://smorfarms:Wizard@07@cluster0.ogo6b.mongodb.net/smorfarm-crop-management?retryWrites=true&w=majority";
 
 mongoose
@@ -19,18 +19,18 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => {
-    console.log("=========================================");
-    console.log("Connected to Smorfarms Crop Management DB");
-    console.log("=========================================");
+    console.log("=============================================");
+    console.log("| Connected to Smorfarms Crop Management DB |");
+    console.log("=============================================");
   });
 
-const port = process.env.PORT || 3000;
+let port = process.env.PORT || 3000;
 
 //START SERVER
 const server = app.listen(port, () => {
-  console.log("==============================");
-  console.log(`Server running on port ${port}`);
-  console.log("==============================");
+  console.log("==================================");
+  console.log(`| Server running on port ${port} |`);
+  console.log("==================================");
 });
 
 process.on("unhandledRejection", (err) => {

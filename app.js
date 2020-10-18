@@ -1,16 +1,16 @@
-const express = require('express');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
-const compression = require('compression');
-const cors = require('cors');
+let express = require('express');
+let rateLimit = require('express-rate-limit');
+let helmet = require('helmet');
+let mongoSanitize = require('express-mongo-sanitize');
+let xss = require('xss-clean');
+let cors = require('cors');
 
-const AppError = require('./utils/appError');
-const globalErrorHandler = require('./controllers/errController');
+let AppError = require('./utils/appError');
+let globalErrorHandler = require('./controller/errController');
+let order_routes = require('./routes/order');
 
 //VARIABLES
-const app = express();
+let app = express();
 
 app.enable('trust proxy');
 
@@ -38,8 +38,6 @@ app.use(mongoSanitize());
 // Data sanitization against XSS
 app.use(xss());
 
-app.use(compression());
-
 //test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toLocaleString();
@@ -48,6 +46,7 @@ app.use((req, res, next) => {
 });
 
 //ROUTES
+app.use('/api/v1/orders', order_routes);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
