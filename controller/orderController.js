@@ -7,9 +7,9 @@ let APIFeatures = require("../utils/apiFeatures");
 
 module.exports = {
   create_order: catchAsync(async (req, res, next) => {
-    let order_id = `Smorfarms-crops-${uuidv4()}`;
+    let order_id = `Smorfarms-crops-order-${uuidv4()}`;
     let request_obj = { ...req.body, order_id };
-    console.log(request_obj);
+    //console.log(request_obj);
     const order = await Order.create(request_obj);
 
     res.status(201).json({

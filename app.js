@@ -8,6 +8,7 @@ let cors = require('cors');
 let AppError = require('./utils/appError');
 let globalErrorHandler = require('./controller/errController');
 let order_routes = require('./routes/order');
+let transfer_routes = require('./routes/transfer');
 
 //VARIABLES
 let app = express();
@@ -47,6 +48,7 @@ app.use((req, res, next) => {
 
 //ROUTES
 app.use('/api/v1/orders', order_routes);
+app.use('/api/v1/transfers', transfer_routes);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

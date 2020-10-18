@@ -35,6 +35,7 @@ const orderSchema = new mongoose.Schema(
       required: [true, "A seller must have an address"],
     },
   },
+  { timestamps: true },
   {
     toJSON: {
       virtuals: true,
@@ -42,9 +43,6 @@ const orderSchema = new mongoose.Schema(
     toObject: {
       virtuals: true,
     },
-  },
-  {
-    timestamps: true,
   }
 );
 
