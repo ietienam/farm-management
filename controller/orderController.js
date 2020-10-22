@@ -6,7 +6,7 @@ let catchAsync = require("../utils/catchAsync");
 let APIFeatures = require("../utils/apiFeatures");
 
 module.exports = {
-  all_orders: catchAsync(async (req, res, next) => {
+  all_active_orders: catchAsync(async (req, res, next) => {
     let features = new APIFeatures(Order.find({ order_status: 0 }), req.query)
       .filter()
       .sort()

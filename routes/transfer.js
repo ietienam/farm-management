@@ -9,7 +9,7 @@ router
   .route("/deliver/:transfer_id")
   .patch(transferController.confirm_delivery);
 router.route("/fail/:transfer_id").patch(transferController.confirm_failure);
-router.route("/request").get(transferController.all_transfer_requests);
+router.route("/request").get(transferController.all_active_transfer_requests);
 router.route("/transit").get(transferController.all_transfers_in_transit);
 router.route("/deliver").get(transferController.all_transfers_delivered);
 router.route("/fail").get(transferController.all_transfers_failed);

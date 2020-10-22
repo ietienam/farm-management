@@ -7,7 +7,7 @@ let catchAsync = require("../utils/catchAsync");
 let APIFeatures = require("../utils/apiFeatures");
 
 module.exports = {
-  all_transfer_requests: catchAsync(async (req, res, next) => {
+  all_active_transfer_requests: catchAsync(async (req, res, next) => {
     let features = new APIFeatures(
       Transfer.find({ transfer_status: 0 }),
       req.query
