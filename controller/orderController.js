@@ -1,11 +1,24 @@
-let Order = require("../model/orders");
-let { v4: uuidv4 } = require("uuid");
+'use strict';
 
-let AppError = require("../utils/appError");
-let catchAsync = require("../utils/catchAsync");
-let APIFeatures = require("../utils/apiFeatures");
+var Order = require("../model/orders");
+var { v4: uuidv4 } = require("uuid");
+
+var AppError = require("../utils/appError");
+var catchAsync = require("../utils/catchAsync");
+var APIFeatures = require("../utils/apiFeatures");
 
 module.exports = {
+  all_orders: catchAsync(async (req, res, next) => {
+    let { destination, from } = req.query;
+    let orders = await Order.find({ destination, from });
+    res.status(200).json({
+      status: true,
+      data: {
+        orders
+      }
+    })
+  }), // filter by destination and from
+
   all_active_orders: catchAsync(async (req, res, next) => {
     let features = new APIFeatures(Order.find({ order_status: 0 }), req.query)
       .filter()
@@ -74,6 +87,23 @@ module.exports = {
     });
   }),
 
+  all_cancelled_orders: catchAsync(async (req, res, next) => {
+    let features = new APIFeatures(Order.find({ order_status: 4 }), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    let cancelled = await features.query;
+    res.status(200).json({
+      status: true,
+      results: cancelled.length,
+      data: {
+        cancelled,
+      },
+    });
+  }),
+
   create_order: catchAsync(async (req, res, next) => {
     let order_id = `Smorfarms-crops-order-${uuidv4()}`;
     let request_obj = { ...req.body, order_id };
@@ -131,5 +161,25 @@ module.exports = {
         order,
       },
     });
+  }),
+
+  cancel_order: catchAsync(async (req, res, next) => {
+    let order_id = req.params.order_id;
+    let order = await Order.find({ order_id });
+    if (order.order_status === 0) {
+      let cancelled_order = await Order.findOneAndUpdate(
+        { order_id },
+        { order_status: 4 },
+        { new: true }
+      );
+      res.status(200).json({
+        status: true,
+        data: {
+          cancelled_order,
+        },
+      });
+    } else {
+      return next(new AppError("You can not cancel this order", 400));
+    }
   }),
 };

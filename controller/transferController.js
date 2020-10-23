@@ -1,12 +1,25 @@
-let Transfer = require("../model/tranfers");
-let Order = require("../model/orders");
-let { v4: uuidv4 } = require("uuid");
+'use strict';
 
-let AppError = require("../utils/appError");
-let catchAsync = require("../utils/catchAsync");
-let APIFeatures = require("../utils/apiFeatures");
+var Transfer = require("../model/tranfers");
+var Order = require("../model/orders");
+var { v4: uuidv4 } = require("uuid");
+
+var AppError = require("../utils/appError");
+var catchAsync = require("../utils/catchAsync");
+var APIFeatures = require("../utils/apiFeatures");
 
 module.exports = {
+  all_transfers: catchAsync(async (req, res, next) => {
+    let { destination, from } = req.query;
+    let transfers = await Transfer.find({ destination, from });
+    res.status(200).json({
+      status: true,
+      data: {
+        transfers
+      }
+    })
+  }), // filter by destination and from
+
   all_active_transfer_requests: catchAsync(async (req, res, next) => {
     let features = new APIFeatures(
       Transfer.find({ transfer_status: 0 }),
@@ -87,6 +100,23 @@ module.exports = {
     });
   }),
 
+  all_cancelled_transfers: catchAsync(async (req, res, next) => {
+    let features = new APIFeatures(Order.find({ transfer_status: 4 }), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    let cancelled = await features.query;
+    res.status(200).json({
+      status: true,
+      results: cancelled.length,
+      data: {
+        cancelled,
+      },
+    });
+  }),
+
   create_transfer: catchAsync(async (req, res, next) => {
     // check that the order was delivered before you request transfer
     let order_id = req.params.order_id;
@@ -156,5 +186,25 @@ module.exports = {
         transfer,
       },
     });
-  }),  
+  }),
+  
+  cancel_transfer: catchAsync(async (req, res, next) => {
+    let transfer_id = req.params.order_id;
+    let transfer = await Order.find({ order_id });
+    if (transfer.transfer_status === 0) {
+      let transfer_request = await Order.findOneAndUpdate(
+        { transfer_id },
+        { transfer_status: 4 },
+        { new: true }
+      );
+      res.status(200).json({
+        status: true,
+        data: {
+          transfer_request,
+        },
+      });
+    } else {
+      return next(new AppError("You can not cancel this transfer", 400));
+    }
+  }),
 };

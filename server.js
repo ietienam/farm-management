@@ -1,4 +1,6 @@
-let mongoose = require("mongoose");
+'use strict';
+
+var mongoose = require("mongoose");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION! Shutting down...");
@@ -6,9 +8,9 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-let app = require("./app");
+var app = require("./app");
 
-let DB =
+var DB =
   "mongodb+srv://smorfarms:Wizard@07@cluster0.ogo6b.mongodb.net/smorfarm-crop-management?retryWrites=true&w=majority";
 
 mongoose
@@ -24,10 +26,10 @@ mongoose
     console.log("=============================================");
   });
 
-let port = process.env.PORT || 3000;
+var port = process.env.PORT || 3000;
 
 //START SERVER
-const server = app.listen(port, () => {
+var server = app.listen(port, () => {
   console.log("==================================");
   console.log(`| Server running on port ${port} |`);
   console.log("==================================");

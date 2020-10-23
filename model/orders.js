@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+var mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
@@ -16,12 +16,17 @@ const orderSchema = new mongoose.Schema(
     },
     order_status: {
       type: Number,
-      default: 0, // 0 = ordered, 1 = in transit, 2 = delivered, 3 = failed
+      default: 0, // 0 = ordered, 1 = in transit, 2 = delivered, 3 = failed, 4 = cancelled
     },
     destination: {
       type: String,
-      default: "benue",
       lowercase: true,
+      required: [true, 'An order must have a destination']
+    },
+    from: {
+      type: String,
+      lowercase: true,
+      required: [true, 'An order must have a from location']
     },
     seller: {
       type: String,
@@ -46,6 +51,12 @@ const orderSchema = new mongoose.Schema(
     },
   }
 );
+
+orderSchema.index({ order_status: 0 });
+orderSchema.index({ order_status: 1 });
+orderSchema.index({ order_status: 2 });
+orderSchema.index({ order_status: 3 });
+orderSchema.index({ order_status: 4 });
 
 const Order = mongoose.model("Order", orderSchema);
 

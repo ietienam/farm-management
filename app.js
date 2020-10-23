@@ -1,17 +1,20 @@
-let express = require('express');
-let rateLimit = require('express-rate-limit');
-let helmet = require('helmet');
-let mongoSanitize = require('express-mongo-sanitize');
-let xss = require('xss-clean');
-let cors = require('cors');
+'use strict';
 
-let AppError = require('./utils/appError');
-let globalErrorHandler = require('./controller/errController');
-let order_routes = require('./routes/order');
-let transfer_routes = require('./routes/transfer');
+var express = require('express');
+var rateLimit = require('express-rate-limit');
+var helmet = require('helmet');
+var mongoSanitize = require('express-mongo-sanitize');
+var xss = require('xss-clean');
+var cors = require('cors');
+
+var AppError = require('./utils/appError');
+var globalErrorHandler = require('./controller/errController');
+var order_routes = require('./routes/order');
+var transfer_routes = require('./routes/transfer');
+var upload_routes = require('./routes/upload');
 
 //VARIABLES
-let app = express();
+var app = express();
 
 app.enable('trust proxy');
 
@@ -22,7 +25,7 @@ app.use(cors());
 app.use(helmet());
 
 // Limit requests from same API
-const limiter = rateLimit({
+var limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour!'
@@ -49,6 +52,7 @@ app.use((req, res, next) => {
 //ROUTES
 app.use('/api/v1/orders', order_routes);
 app.use('/api/v1/transfers', transfer_routes);
+app.use('/api/v1/images', upload_routes);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

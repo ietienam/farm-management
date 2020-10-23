@@ -1,4 +1,6 @@
-const AppError = require('../utils/appError');
+'use strict';
+
+var AppError = require('../utils/appError');
 
 //HANDLE ERRORS FROM INVALID FIELDS
 const handleValidationErrorDB = err => {
@@ -22,7 +24,7 @@ const sendError = (err, res) => {
     });
   } else {
     //LOG TO CONSOLE
-    console.error("ERROR: ", err);
+    //console.error("ERROR: ", err);
 
     // B) Programming or other unknown error: don't leak error details
     res.status(500).json({
@@ -38,7 +40,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || false;
 
   let error = { ...err, message: err.message };
-  console.log(error);
+  //console.log(error);
 
   //INVALID ENTRY ERROR(HANDLES VALIDATION ERROR FOR FIELDS)
   if (error.errors) error = handleValidationErrorDB(error);
