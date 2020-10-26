@@ -6,6 +6,7 @@ var sharp = require("sharp");
 var AppError = require("../utils/appError");
 var catchAsync = require("../utils/catchAsync");
 var DB = require("../utils/config");
+var { v4: uuidv4 } = require("uuid");
 
 const multerStorage = multer.memoryStorage();
 
@@ -31,7 +32,7 @@ exports.resize_photo = catchAsync(async (req, res, next) => {
     );
   } else {
     req.file.extension = req.file.mimetype.split("/")[1];
-    req.file.filename = `smorfarm-${Date.now()}.${req.file.extension}`;
+    req.file.filename = `smorfarm-upload-${uuidv4()}-${Date.now()}.${req.file.extension}`;
     await sharp(req.file.buffer)
       .resize(500, 500)
       .jpeg({ quality: 90, force: false })

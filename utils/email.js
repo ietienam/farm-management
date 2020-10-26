@@ -45,13 +45,13 @@ module.exports = class Email {
     await this.newTransport().sendMail(mailOptions);
   }
 
-  async sendWelcome() {
-    await this.send('welcome', 'Welcome to WorkGate!');
+  async createOrder() {
+    await this.send('createOrder', 'Welcome to WorkGate!');
   }
 
-  async sendPasswordReset() {
+  async createTransfer() {
     await this.send(
-      'passwordReset',
+      'createTransfer',
       'Your password reset token (valid for only 5 minutes)'
     );
   }

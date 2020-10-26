@@ -4,6 +4,9 @@ var express = require("express");
 var router = express.Router();
 
 var transferController = require("../controller/transferController");
+var auth = require('../controller/authController');
+
+router.use(auth.protect);
 
 router.route("/create/:order_id").post(transferController.create_transfer);
 router.route("/transit/:transfer_id").patch(transferController.confirm_transit);
