@@ -71,7 +71,7 @@ exports.upload_to_DB = catchAsync(async (req, res, next) => {
       }
       //console.log("Successfully deleted file");
     });
-    res.status(201).json({
+    res.status(200).json({
       status: true,
       data: {
         image_url,
