@@ -11,9 +11,9 @@ router.use(auth.protect);
 router
   .route("/upload")
   .post(
-    uploadController.upload_photo,
+    //uploadController.upload_photo,
     uploadController.resize_photo,
-    //uploadController.upload_to_DB
+    uploadController.upload_to_DB
   );
 router.route("/delete").delete(uploadController.delete_from_DB);
 

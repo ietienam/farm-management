@@ -23,7 +23,7 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-exports.upload_photo = upload.single("photo"); // name of req property
+//exports.upload_photo = upload.single("photo"); // name of req property
 
 exports.resize_photo = catchAsync(async (req, res, next) => {
   if (!req.file) {
@@ -31,11 +31,15 @@ exports.resize_photo = catchAsync(async (req, res, next) => {
       new AppError("Image not found. Please upload an image now!", 400)
     );
   } else {
-    console.log(req.file)
-    res.json({
-      status: true,
-      message:"hello"
-    });
+    req.file.extension = req.file.mimetype.split("/")[1];
+    req.file.filename = `smorfarm-upload-${uuidv4()}-${Date.now()}.${req.file.extension}`;
+    await sharp(req.file.buffer)
+      .resize(500, 500)
+      .jpeg({ quality: 90, force: false })
+      .png({ quality: 90, force: false })
+      .toFile(`public/img/${req.file.filename}`);
+
+    next();
   }
 });
 
