@@ -23,9 +23,10 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-//exports.upload_photo = upload.single("photo"); // name of req property
+exports.upload_photo = upload.single('photo'); // name of req property
 
 exports.resize_photo = catchAsync(async (req, res, next) => {
+  console.log(req.file);
   if (!req.file) {
     return next(
       new AppError("Image not found. Please upload an image now!", 400)
