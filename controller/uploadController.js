@@ -94,7 +94,7 @@ exports.delete_from_DB = catchAsync(async (req, res, next) => {
     let filename = req.query.filename;
     let image = await DB.bucket.file(filename).delete();
     if (image) {
-      res.status(204).json({
+      res.status(200).json({
         status: true,
         message: 'Image successfully deleted'
       })
