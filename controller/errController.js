@@ -40,7 +40,7 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || false;
 
   let error = { ...err, message: err.message };
-  //console.log(error);
+  console.log(error);
 
   //INVALID ENTRY ERROR(HANDLES VALIDATION ERROR FOR FIELDS)
   if (error.errors) error = handleValidationErrorDB(error);
