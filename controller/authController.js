@@ -20,7 +20,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     const decoded = await promisify(jwt.verify)(token, 'mysecret');
     console.log(decoded);
 
-    if (decoded.id) {
+    if (decoded) {
       next();
     } else {
       return next(new AppError('Token not valid. Please login!', 400));
