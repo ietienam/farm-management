@@ -13,6 +13,7 @@ const handleWebTokenError = () => new AppError('Invalid Token! Please login agai
 
 const handleExpiredTokenError = () => new AppError('Token Expired! Please login again', 401);
 
+const handleMulterError = err => new AppError(`${err.message}`, 400);
 
 //GLOBAL ERROR HANDLER
 const sendError = (err, res) => {
@@ -47,6 +48,7 @@ module.exports = (err, req, res, next) => {
   //HANDLE DUPLICATE EMAIL
   if (error.name === 'JsonWebTokenError') error = handleWebTokenError();
   if (error.name === 'TokenExpiredError') error = handleExpiredTokenError();
+  if (error.name === 'MulterError') error = handleMulterError(error);
 
   sendError(error, res);
 };

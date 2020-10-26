@@ -71,7 +71,7 @@ exports.upload_to_DB = catchAsync(async (req, res, next) => {
       }
       //console.log("Successfully deleted file");
     });
-    res.status(200).json({
+    res.status(201).json({
       status: true,
       data: {
         image_url,
@@ -94,14 +94,11 @@ exports.delete_from_DB = catchAsync(async (req, res, next) => {
     let filename = req.query.filename;
     let image = await DB.bucket.file(filename).delete();
     if (image) {
-      res.status(200).json({
+      res.status(204).json({
         status: true,
         message: 'Image successfully deleted'
       })
     } else {
-      res.status(400).json({
-        status: false,
-        message: 'Failed to successfully delete image'
-      })
+      return next(new AppError('Failed to successfully delete image', 400));
     }
 })
