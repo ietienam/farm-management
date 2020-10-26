@@ -6,7 +6,7 @@ var router = express.Router();
 var uploadController = require("../controller/uploadController");
 var auth = require('../controller/authController');
 
-//router.use(auth.protect);
+router.use(auth.protect);
 
 router
   .route("/upload")
