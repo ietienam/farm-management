@@ -14,9 +14,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   if (!token) {
-    if (req.file) {
-      req.file = undefined;
-    }
     return next(new AppError("Access denied! Please logIn", 401));
   } else {
     //VERIFY TOKEN
