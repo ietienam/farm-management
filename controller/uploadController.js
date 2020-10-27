@@ -1,6 +1,5 @@
 "use strict";
 
-var fs = require("fs");
 var multer = require("multer");
 var sharp = require("sharp");
 var AppError = require("../utils/appError");
