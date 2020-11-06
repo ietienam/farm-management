@@ -20,6 +20,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       console.log(decoded.id);
 
       if (decoded.id) {
+        req.user = decoded.id;
         next();
       } else {
         return next(new AppError("Token not valid. Please login!", 400));

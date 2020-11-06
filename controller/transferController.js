@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var Transfer = require("../model/tranfers");
 var Order = require("../model/orders");
@@ -11,13 +11,22 @@ var APIFeatures = require("../utils/apiFeatures");
 module.exports = {
   all_transfers: catchAsync(async (req, res, next) => {
     let { destination, from } = req.query;
-    let transfers = await Transfer.find({ destination, from });
+    let features = new APIFeatures(
+      Transfer.find({ destination, from }),
+      req.query
+    )
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    let transfers = await features.query;
     res.status(200).json({
       status: true,
       data: {
-        transfers
-      }
-    })
+        transfers,
+      },
+    });
   }), // filter by destination and from
 
   all_active_transfer_requests: catchAsync(async (req, res, next) => {
@@ -101,7 +110,10 @@ module.exports = {
   }),
 
   all_cancelled_transfers: catchAsync(async (req, res, next) => {
-    let features = new APIFeatures(Order.find({ transfer_status: 4 }), req.query)
+    let features = new APIFeatures(
+      Order.find({ transfer_status: 4 }),
+      req.query
+    )
       .filter()
       .sort()
       .limitFields()
@@ -187,7 +199,7 @@ module.exports = {
       },
     });
   }),
-  
+
   cancel_transfer: catchAsync(async (req, res, next) => {
     let transfer_id = req.params.order_id;
     let transfer = await Order.find({ order_id });

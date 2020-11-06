@@ -10,7 +10,13 @@ var APIFeatures = require("../utils/apiFeatures");
 module.exports = {
   all_orders: catchAsync(async (req, res, next) => {
     let { destination, from } = req.query;
-    let orders = await Order.find({ destination, from });
+    let features = new APIFeatures(Order.find({ destination, from }), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    let orders = await features.query;
     res.status(200).json({
       status: true,
       data: {

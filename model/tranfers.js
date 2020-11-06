@@ -33,9 +33,6 @@ const transferSchema = new mongoose.Schema(
     toObject: {
       virtuals: true,
     },
-  },
-  {
-    timestamps: true,
   }
 );
 
