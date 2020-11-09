@@ -19,7 +19,7 @@ var coupon_controller = require("./controller/couponConroller");
 
 //task to run every day at 12:00 Am
 cron.schedule("0 0 * * *", async () => {
-  await coupon_controller.deactivate_expired_coupon()
+  await coupon_controller.deactivate_expired_coupons()
   console.log("running coupon expiration task every day at midnight");
 });
 

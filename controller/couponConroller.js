@@ -44,8 +44,7 @@ exports.all_inactive_coupons = catchAsync(async (req, res, next) => {
 });
 
 exports.create_coupon = catchAsync(async (req, res, next) => {
-  let coupon_value = uuidv4();
-  coupon_value = coupon_value.substring(0, 6);
+  let coupon_value = uuidv4().substring(0, 6);
 
   let new_coupon = await Coupon.create({
     value: req.body.value,
@@ -85,20 +84,27 @@ exports.deactivate_coupon = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.deactivate_expired_coupon = async () => {
-  let date = new Date().toLocaleString().split(",")[0];
-  let expired_coupons = await Coupon.find({
-    expires_at: date,
-    coupon_status: true,
-  });
-  if (expired_coupons) {
-    expired_coupons.map(async (coupon) => {
-      await Coupon.findByIdAndUpdate(
-        { _id: coupon._id },
-        { coupon_status: false },
-        { new: true }
-      );
+exports.deactivate_expired_coupons = async () => {
+  try {
+    let date = new Date().toLocaleString().split(",")[0];
+    let expired_coupons = await Coupon.find({
+      expires_at: date,
+      coupon_status: true,
     });
+    if (expired_coupons) {
+      expired_coupons.map(async (coupon) => {
+        let expire = await Coupon.findByIdAndUpdate(
+          { _id: coupon._id },
+          { coupon_status: false },
+          { new: true }
+        );
+        if (expire) {
+          console.log("Expired coupons deactivated");
+        }
+      });
+    }
+  } catch (error) {
+    console.log(`Coupon deactivation failed. Err: ${error}`);
   }
 };
 
@@ -128,14 +134,14 @@ exports.use_coupon = catchAsync(async (req, res, next) => {
   let check_coupon = await Coupon.find({
     coupon: coupon,
     coupon_status: true,
-  }).select(["-used_at", "__v"]);
+  });
   if (check_coupon) {
-    let date = new Date().toLocaleString().split(",")[0];
+    /*let date = new Date().toLocaleString().split(",")[0];
     await Coupon.findByIdAndUpdate(
       { _id: check_coupon._id },
       { coupon_status: false, used_at: date },
       { new: true }
-    );
+    );*/
     res.status(200).json({
       status: true,
       data: {
