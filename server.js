@@ -10,9 +10,7 @@ process.on("uncaughtException", (err) => {
 
 var app = require("./app");
 
-var DB =
-  "mongodb+srv://smorfarms:Wizard@07@cluster0.ogo6b.mongodb.net/smorfarm-crop-management?retryWrites=true&w=majority";
-
+var DB = "db here"
 mongoose
   .connect(DB, {
     useUnifiedTopology: true,
